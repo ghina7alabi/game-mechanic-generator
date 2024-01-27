@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Tilemap levelTilemap;
     [SerializeField] private Tilemap obstaclesTilemap;
     [SerializeField] private Tilemap pushableObstaclesTilemap;
+    [SerializeField] private Tilemap targetsTilemap;
 
     private PlayerMovement controls;
 
@@ -39,7 +40,10 @@ public class PlayerController : MonoBehaviour
         {
             transform.position += (Vector3) direction;
         }
-        
+        if (OnTarget())
+        {
+            Debug.Log("You're on a target");
+        }
     }
 
     private bool CanMove(Vector2 direction)
@@ -65,7 +69,7 @@ public class PlayerController : MonoBehaviour
             var tile = pushableObstaclesTilemap.GetTile(gridPosition);
             Vector3Int newPosition = levelTilemap.WorldToCell(transform.position + (Vector3)(direction * 2));
 
-            if(levelTilemap.HasTile(newPosition))
+            if(levelTilemap.HasTile(newPosition) && !obstaclesTilemap.HasTile(newPosition))
             {
                 pushableObstaclesTilemap.SetTile(newPosition, tile);
                 pushableObstaclesTilemap.SetTile(gridPosition, null);
@@ -74,6 +78,18 @@ public class PlayerController : MonoBehaviour
 
             return true;
         }
+        return false;
+    }
+
+    private bool OnTarget()
+    {
+        Vector3Int gridPosition = levelTilemap.WorldToCell(transform.position);
+
+        if (targetsTilemap.HasTile(gridPosition))
+        {
+            return true;
+        }
+
         return false;
     }
 }
