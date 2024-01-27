@@ -40,10 +40,10 @@ public class PlayerController : MonoBehaviour
         {
             transform.position += (Vector3) direction;
         }
-        if (OnTarget())
+       /* if (IsPlayerOnTilemap(targetsTilemap))
         {
             Debug.Log("You're on a target");
-        }
+        }*/
     }
 
     private bool CanMove(Vector2 direction)
@@ -69,11 +69,16 @@ public class PlayerController : MonoBehaviour
             var tile = pushableObstaclesTilemap.GetTile(gridPosition);
             Vector3Int newPosition = levelTilemap.WorldToCell(transform.position + (Vector3)(direction * 2));
 
-            if(levelTilemap.HasTile(newPosition) && !obstaclesTilemap.HasTile(newPosition))
+            if(levelTilemap.HasTile(newPosition) && !obstaclesTilemap.HasTile(newPosition) && !pushableObstaclesTilemap.HasTile(newPosition))
             {
                 pushableObstaclesTilemap.SetTile(newPosition, tile);
                 pushableObstaclesTilemap.SetTile(gridPosition, null);
                 transform.position += (Vector3)direction;
+
+               /* if (targetsTilemap.HasTile(newPosition))
+                {
+                    Debug.Log("pushable obstacle is on target");
+                }*/
             }
 
             return true;
@@ -81,11 +86,11 @@ public class PlayerController : MonoBehaviour
         return false;
     }
 
-    private bool OnTarget()
+    private bool IsPlayerOnTilemap(Tilemap tilemap)
     {
         Vector3Int gridPosition = levelTilemap.WorldToCell(transform.position);
 
-        if (targetsTilemap.HasTile(gridPosition))
+        if (tilemap.HasTile(gridPosition))
         {
             return true;
         }
