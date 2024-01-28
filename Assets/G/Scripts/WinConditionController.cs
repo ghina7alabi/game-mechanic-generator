@@ -6,6 +6,7 @@ public class WinConditionController : MonoBehaviour
 
     [SerializeField] private Tilemap pushableObstaclesTilemap;
     [SerializeField] private Tilemap targetsTilemap;
+    [SerializeField] private Tilemap collectablesTilemap;
 
     private void Update()
     {
@@ -68,6 +69,46 @@ public class WinConditionController : MonoBehaviour
         }
 
         if (onTargetCount == 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private bool IsNoneXTiles(Tilemap xTilemap)
+    {
+        int count = 0;
+        BoundsInt bounds = xTilemap.cellBounds;
+
+        foreach (Vector3Int position in bounds.allPositionsWithin)
+        {
+            if (xTilemap.HasTile(position))
+            {
+                count++;
+            }
+        }
+
+        if (count == 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private bool IsSomeXTiles(Tilemap xTilemap, int targetCount)
+    {
+        int count = 0;
+        BoundsInt bounds = xTilemap.cellBounds;
+
+        foreach (Vector3Int position in bounds.allPositionsWithin)
+        {
+            if (xTilemap.HasTile(position))
+            {
+                count++;
+            }
+        }
+
+        if (targetCount == count)
         {
             return true;
         }

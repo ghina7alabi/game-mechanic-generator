@@ -7,6 +7,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Tilemap obstaclesTilemap;
     [SerializeField] private Tilemap pushableObstaclesTilemap;
     [SerializeField] private Tilemap targetsTilemap;
+    [SerializeField] private Tilemap disappearingBlocksTilemap;
+    [SerializeField] private Tilemap collectablesTilemap;
 
     private PlayerMovement controls;
 
@@ -57,6 +59,9 @@ public class PlayerController : MonoBehaviour
             return false;
         }
 
+        CheckForDisappearingBlocks(gridPosition);
+        CheckForCollectables(gridPosition);
+
         return true;
     }
 
@@ -84,6 +89,23 @@ public class PlayerController : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    private void CheckForDisappearingBlocks(Vector3Int gridPosition)
+    {
+        if (disappearingBlocksTilemap.HasTile(gridPosition))
+        {
+            disappearingBlocksTilemap.SetTile(gridPosition, null);
+            levelTilemap.SetTile(gridPosition, null);
+        }
+    }
+
+    private void CheckForCollectables(Vector3Int gridPosition)
+    {
+        if (collectablesTilemap.HasTile(gridPosition))
+        {
+            collectablesTilemap.SetTile(gridPosition, null);
+        }
     }
 
     private bool IsPlayerOnTilemap(Tilemap tilemap)
